@@ -1,0 +1,67 @@
+#include <stdio.h> 
+#include <stdlib.h> 
+// Node structure for circular doubly linked list 
+struct Node { 
+int data; 
+struct Node *next; 
+struct Node *prev; 
+}; 
+struct Node* head = NULL; 
+// Function to insert a node at the end of the list 
+void insertEnd(int value) { 
+struct Node* newNode = (struct Node*) malloc(sizeof(struct Node)); 
+newNode->data = value; 
+if (head == NULL) { // List is empty 
+newNode->next = newNode; 
+newNode->prev = newNode; 
+head = newNode; 
+} else { 
+struct Node* last = head->prev; // Find last node 
+newNode->next = head; 
+head->prev = newNode; 
+newNode->prev = last; 
+last->next = newNode; 
+} 
+} 
+// Function to display the list from the beginning 
+void display() { 
+if (head == NULL) { 
+printf("List is empty\n"); 
+return; 
+} 
+struct Node* temp = head; 
+printf("Circular Doubly Linked List: "); 
+do { 
+printf("%d ", temp->data); 
+temp = temp->next; 
+} while (temp != head); // Stop when we circle back to the head 
+printf("\n"); 
+} 
+// Function to delete a node from the front 
+void deleteFront() { 
+if (head == NULL) { 
+printf("List is empty, cannot delete\n"); 
+return; 
+} 
+struct Node* last = head->prev; // Get last node 
+struct Node* temp = head; 
+if (head->next == head) { // Only one node in the list 
+head = NULL; 
+free(temp); 
+} else { 
+last->next = head->next; 
+head->next->prev = last; 
+head = head->next; 
+free(temp); 
+} 
+} 
+int main() { 
+insertEnd(10); 
+insertEnd(20); 
+insertEnd(30); 
+insertEnd(40); 
+display(); // Display the list 
+deleteFront(); // Delete front node (10) 
+display(); // Display after deletion 
+return 0; 
+} 
